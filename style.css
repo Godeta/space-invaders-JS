@@ -5,3 +5,9 @@ html, body {
 canvas {
   display: block;
 }
+
+.rules {
+	position: absolute;
+	top:5%;
+	left:82%;
+}
