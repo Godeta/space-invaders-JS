@@ -1,8 +1,8 @@
 class Ennemi {
 
   constructor(x, y, widtht, heightt,damage =0) {
-    this.img = loadImage("../img/ennemis.png");
-    this.boom = loadImage("../img/boom_effect.png");
+    this.img = loadImage("img/ennemis.png");
+    this.boom = loadImage("img/boom_effect.png");
 
     this.x = x;
     this.y = y;
@@ -15,7 +15,10 @@ class Ennemi {
   show() {
     this.move(2);
     if (!this.death()) { //si il n'est pas mort
+      //plus il prend de dégat plus la teinture passe de blanc à rouge
+      tint(255,255-this.damage*100,255-this.damage*100);
     image(this.img, this.x, this.y, this.w, this.h);
+      noTint();
     }
   }
 

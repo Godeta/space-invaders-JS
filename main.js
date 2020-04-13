@@ -18,7 +18,7 @@ function setup() {
    bullets[i]= new Bullet(i*100,600,2,-2);
   }*/
   
-  background = loadImage("../img/background.png");
+  background = loadImage("img/background.png");
 }
 
 function draw() {

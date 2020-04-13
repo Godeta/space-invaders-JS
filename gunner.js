@@ -7,9 +7,9 @@ class Gunner {
 
   constructor(x, y, ite, widtht, heightt) {
     this.gun = [];
-    this.gun[0] = loadImage("../img/gun0.png");
-    this.gun[1] = loadImage("../img/gun1.png");
-    this.gun[2] = loadImage("../img/gun2.png");
+    this.gun[0] = loadImage("img/gun0.png");
+    this.gun[1] = loadImage("img/gun1.png");
+    this.gun[2] = loadImage("img/gun2.png");
 
     this.x = x;
     this.y = y;
