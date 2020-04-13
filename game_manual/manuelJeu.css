@@ -1,3 +1,10 @@
 h1 {
 color: brown;
 }
+
+/*image pour le jeu*/
+.game {
+	position: absolute;
+	top:5%;
+	left:82%;
+}
