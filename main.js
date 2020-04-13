@@ -28,14 +28,27 @@ function draw() {
   if (phase ==0) {
   start();
   }
+  
   //les ennemis arrivent
   else if (phase ==1) {
+    //animation du canon
      if (ite <2 && frameCount %50 == 49) {
    ite++; 
   }
-    
+    if (ennemis.length ==0) { //si il n'y a plus d'ennemis
+     phase =2; 
+    }
   }
- 
+  //tous les ennemis sont morts, victoire
+  else if (phase ==2) {
+    //affichage de la victoire, feu d'artifice
+   
+    //recommencer
+    fill(255);
+    textSize(20);
+    text("Appuyer sur R pour recommencer",300,300);
+  }
+  
   //affichage des balles
   for (let b of bullets) {
    b.show(); 
