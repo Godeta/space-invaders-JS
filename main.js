@@ -85,7 +85,7 @@ function display() {
   }
   
   //si on meurt
-  if (gun.death() && frameCount % 200 == 185) {
+  if (gun.death() && frameCount % 100 == 80) {
       phase = 4;
     } 
 }
