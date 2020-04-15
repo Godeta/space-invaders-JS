@@ -1,8 +1,7 @@
 class Ennemi {
 
-  constructor(x, y, widtht, heightt,damage =0) {
+  constructor(x, y, widtht, heightt, damage = 0) {
     this.img = loadImage("img/ennemis.png");
-    this.boom = loadImage("img/boom_effect.png");
 
     this.x = x;
     this.y = y;
@@ -11,13 +10,14 @@ class Ennemi {
     this.damage = damage;
   }
 
-  //prend en paramètre l'indice de l'image et affiche le gun correspondant
+  //affiche les ennemis + effectue leur déplacement + attaque
   show() {
     this.move(2);
+    this.attack();
     if (!this.death()) { //si il n'est pas mort
       //plus il prend de dégat plus la teinture passe de blanc à rouge
-      tint(255,255-this.damage*100,255-this.damage*100);
-    image(this.img, this.x, this.y, this.w, this.h);
+      tint(255, 255 - this.damage * 100, 255 - this.damage * 100);
+      image(this.img, this.x, this.y, this.w, this.h);
       noTint();
     }
   }
@@ -31,15 +31,23 @@ class Ennemi {
     //si il dépasse le bord de l'écran il //revient au début + une ligne en dessous
     this.x += value;
   }
-  
-  death () {
-   if (this.damage>2) {
-    tint(200,0,0);
-    image(this.img, this.x, this.y, this.w, this.h);
-     image(this.boom,this.x+10,this.y);
-     noTint();
-     return true;
-   }
+
+  //attaques, plus rares quand il y a beaucoup d'ennemis
+  attack() {
+    if (random(1) < 0.02-ennemis.length*0.002) {
+      let bul1 = new Bullet(this.x + 35, this.y + 80, 0, 3,16,18,1);
+      bullets.push(bul1);
+    }
+  }
+
+  death() {
+    if (this.damage > 2) {
+      tint(200, 0, 0);
+      image(this.img, this.x, this.y, this.w, this.h);
+      image(boom, this.x + 10, this.y);
+      noTint();
+      return true;
+    }
     return false;
   }
 }
