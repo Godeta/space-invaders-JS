@@ -10,17 +10,17 @@ class Boss {
     this.h = heightt;
     this.damage = damage;
     //pour le déplacement random avec perlin noise
-    this.xoff1 =0;
-    this.xoff2 = 10000;
+    this.xoff1 =random(0,100);
+    this.xoff2 = random(5000,10000);
     //vitesse
     this.speed =0.01;
   }
 
   //affiche le boss + son déplacement + ses attaques
   show() {
+    if (!this.death()) { //si il n'est pas mort
     this.move();
     this.attack();
-    if (!this.death()) { //si il n'est pas mort
       //plus il prend de dégat plus la teinture passe de blanc à rouge
       tint(255,255-this.damage*10,255-this.damage*10);
     image(this.img, this.x, this.y, this.w, this.h);
@@ -46,7 +46,11 @@ class Boss {
   
   //attaques fréquentes et balles plus grandes
   attack() {
-    if (random(1) < 0.03) {
+    let speedAtt;
+    if (difficulty=="easy") {speedAtt=0.015;}
+    else if (difficulty=="medium") {speedAtt=0.02;}
+    else if (difficulty == "hard" || "impossible") {speedAtt=0.03;}
+    if (random(1) < speedAtt) {
       let bul1 = new Bullet(this.x + 35, this.y + 200, 0, 3,20,23,2);
       bullets.push(bul1);
     }
@@ -62,4 +66,4 @@ class Boss {
    }
     return false;
   }
-}
+} 

@@ -18,7 +18,8 @@ class Gunner {
     this.h = heightt;
 
     this.dirX = 0;
-    this.damage = 0;
+    //de base, 5 vies
+    this.life =5;
 
   }
 
@@ -53,7 +54,7 @@ class Gunner {
 
   //si on a pris trop de dégats
   death() {
-    if (this.damage >= 5) {
+    if (this.damage >= this.life) {
       tint(200, 0, 0);
       image(this.gun[0], this.x, this.y, this.w, this.h);
       image(boom, this.x - 20, this.y + 20);

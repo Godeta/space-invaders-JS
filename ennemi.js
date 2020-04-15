@@ -34,7 +34,11 @@ class Ennemi {
 
   //attaques, plus rares quand il y a beaucoup d'ennemis
   attack() {
-    if (random(1) < 0.02-ennemis.length*0.002) {
+    let speedAtt;
+    if (difficulty == "easy") {speedAtt=0.02-ennemis.length*0.002;}
+    else if (difficulty =="medium") {speedAtt=0.03-ennemis.length*0.002;}
+    else if (difficulty =="hard" || difficulty == "impossible") {speedAtt=0.05-ennemis.length*0.003;}
+    if (random(1) < speedAtt) {
       let bul1 = new Bullet(this.x + 35, this.y + 80, 0, 3,16,18,1);
       bullets.push(bul1);
     }

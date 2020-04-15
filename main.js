@@ -7,10 +7,13 @@ let bullets = [];
 
 let background;
 let gunCol; //couleur du gunner choisie manuellement
+let selectDiff; //selecteur de difficulté
 
-let boss;
+let boss, boss2;
 //image lorsque un personnage meurt et vie du perso
 let boom, heart;
+
+let difficulty = "easy";
 
 function setup() {
   createCanvas(800, 600);
@@ -18,9 +21,10 @@ function setup() {
   heart = loadImage("img/heart.png");
   gun = new Gunner(400, 510, 0, 100, 100);
   boss = new Boss(width / 2, 50, 80, 180);
-  
+  boss2 = new Boss(width / 3, 0, 100, 200);
+
   /*initialisation des tableaux déplacée dans start comme ça pour les tests sur le boss je peux directement aller en phase 2 sans affronter les ennemis*/
-  
+
   //initialisation du tableau de balles
   /*for (let i =0; i<8; i++) {
    bullets[i]= new Bullet(i*100,600,2,-2);
@@ -32,13 +36,20 @@ function setup() {
   createP("Repeindre notre canon :");
   //permet de choisir la couleur du boss
   gunCol = createColorPicker(color(255, 255, 255)).input(redraw);
+  //choisir la difficulté
+  selectDiff = createSelect();
+  selectDiff.option('easy');
+  selectDiff.option('medium');
+  selectDiff.option('hard');
+  selectDiff.option('impossible');
+  selectDiff.changed(mySelectEvent); //si on change de valeur alors ça lance la fonction mySelectEvent
 }
 
 function draw() {
   image(background, 0, 0, width, height);
   /*déroulement du jeu avec une phase pour le début, une pour les ennemis, une pour le boss et 2 pour victoire ou défaite*/
   allPhases();
-//affichage constant
+  //affichage constant
   display();
 
 }
@@ -47,7 +58,7 @@ function draw() {
 function display() {
   //affichage de la vie de notre canon
   life();
- //affichage des balles
+  //affichage des balles
   for (let b of bullets) {
     b.show();
     //vérifie si une balle touche un ennemi
@@ -57,12 +68,17 @@ function display() {
       }
     }
     //vérifie si une balle touche le boss
-    if (phase == 2 && b.hit(boss)) {
-      boss.damage++;
+    if (phase == 2) {
+      if (b.hit(boss)) {
+        boss.damage++;
+      }
+      if (difficulty == "impossible" && b.hit(boss2)) {
+        boss2.damage++;
+      }
     }
     //vérifie si une balle touche notre canon
-    if (b.hit(gun) ) {
-     gun.damage++; 
+    if (b.hit(gun)) {
+      gun.damage++;
     }
   }
 
@@ -83,16 +99,16 @@ function display() {
       bullets.splice(i, 1);
     }
   }
-  
+
   //si on meurt
   if (gun.death() && frameCount % 100 == 80) {
-      phase = 4;
-    } 
+    phase = 4;
+  }
 }
 
 //déroulement du jeu en différentes phases
 function allPhases() {
-   //le début
+  //le début
   if (phase == 0) {
     start();
   }
@@ -110,9 +126,18 @@ function allPhases() {
   //tous les ennemis sont morts, le boss arrive
   else if (phase == 2) {
     boss.show();
+    if (difficulty == "impossible") {
+     boss2.show(); 
+      //si les 2 boss sont morts
+    if (boss.death() && boss2.death() && frameCount % 150 == 140) {
+      phase = 3;
+    }
+    }
+    else { //si on est pas en mode impossible
     //si le boss est mort + frameCount pour laisser un peu l'animation de mort
     if (boss.death() && frameCount % 150 == 140) {
       phase = 3;
+    }
     }
   }
 
@@ -133,15 +158,21 @@ function allPhases() {
     fill(255);
     textSize(20);
     text("Appuyer sur R pour recommencer", 300, 300);
-  } 
+  }
 }
 
 //début de la partie, lorsque phase =0
 function start() {
   ite = 0;
-    //réinitialisation de la vie de notre canon et du boss
-    gun.damage =0;
-    boss.damage =0;
+  //réinitialisation de la vie de notre canon et du boss
+  gun.damage = 0;
+  boss.damage = 0;
+  //en difficulté moyen on a seulement 3 vies
+  if (difficulty == "medium") {
+    gun.life = 3;
+  } else {
+    gun.life = 5;
+  }
   //initialisation du tableau d'ennemis
   iniTab();
   if (frameCount % 50 == 49) {
@@ -155,8 +186,7 @@ function keyPressed() {
   if (key === " ") {
     bul = new Bullet(gun.x + 35, gun.y - 10, 0, -3);
     bullets.push(bul);
-  }
-  else if (key === "r" || key === "R") {
+  } else if (key === "r" || key === "R") {
     phase = 0;
   }
 
@@ -176,18 +206,45 @@ function keyReleased() {
 
 //initialisation des tableaux 
 function iniTab() {
+  let nbEnnemi;
+  //selon la difficulté
+  switch (difficulty) {
+    case 'easy':
+      nbEnnemi = 8;
+      break;
+    case 'medium':
+      nbEnnemi = 12;
+      break;
+    case 'hard':
+      nbEnnemi = 13;
+      break;
+    case 'impossible':
+      nbEnnemi = 13;
+      break;
+    default:
+      console.log("difficulté indéterminée !");
+  }
+
   //tableau des ennemis
-  for (let i = 0; i < 8; i++) {
+  for (let i = 0; i < nbEnnemi; i++) {
     ennemis[i] = new Ennemi(i * 100, 0, 70, 70);
   }
   //réinitialisation du tableau de balles à 0 au début
   bullets = [];
 }
 
-//vie de notre canon
+//vie de notre canon + difficulté
 function life() {
   //5 coeurs, 1 coeur en moins pour chaque dégats
-  for (let i=0; i <5-gun.damage;i++) {
-    image(heart,width-175+i*35,50,30,30);
+  for (let i = 0; i < gun.life - gun.damage; i++) {
+    image(heart, width - 175 + i * 35, 50, 30, 30);
   }
+  fill(255);
+  textSize(20);
+  text("Mode : " + difficulty, width - 200, 120);
+}
+
+//changement de difficulté
+function mySelectEvent() {
+  difficulty = selectDiff.value();
 }
