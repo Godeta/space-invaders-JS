@@ -139,6 +139,9 @@ function allPhases() {
 //début de la partie, lorsque phase =0
 function start() {
   ite = 0;
+    //réinitialisation de la vie de notre canon et du boss
+    gun.damage =0;
+    boss.damage =0;
   //initialisation du tableau d'ennemis
   iniTab();
   if (frameCount % 50 == 49) {
