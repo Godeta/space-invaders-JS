@@ -1,7 +1,19 @@
-.title {
-	color: brown;
-	
-}
+.glow {
+	font-size: 50px;
+	color: rgb(219, 109, 65);
+	-webkit-animation: glow 1s ease-in-out infinite alternate;
+	-moz-animation: glow 1s ease-in-out infinite alternate;
+	animation: glow 1s ease-in-out infinite alternate;
+  }
+  
+  @-webkit-keyframes glow {
+	from {
+	  text-shadow: 0 0 10px rgb(219, 109, 65), 0 0 20px rgb(219, 109, 65), 0 0 30px rgb(146, 102, 102), 0 0 40px rgb(146, 102, 102), 0 0 50px rgb(146, 102, 102), 0 0 60px rgb(146, 102, 102), 0 0 70px rgb(146, 102, 102);
+	}
+	to {
+	  text-shadow: 0 0 20px rgb(219, 109, 65), 0 0 30px #ffffff, 0 0 40px #ffffff, 0 0 50px #ffffff, 0 0 60px #ffffff, 0 0 70px #ffffff, 0 0 80px #ffffff;
+	}
+  }
 
 /*image pour le jeu*/
 .game {

@@ -12,8 +12,22 @@ let selectDiff; //selecteur de difficulté
 let boss, boss2;
 //image lorsque un personnage meurt et vie du perso
 let boom, heart;
-
+//les différentes difficultées
 let difficulty = "easy";
+//le nécessaire pour les feux d'artifices
+//tableau de feux d'artifices
+let fireworks = [];
+//gravité et un vecteur que l'on ajoute et qui sera accéléré dans particle
+let gravity;
+//tableau contenant le texte à afficher
+let letter = ["Victoire !", "Defaite"];
+//compte l'avancée dans le tableau
+let textCounter = 0;
+
+//avant le setup, load police et musique
+function preload() {
+  font = loadFont('Montserrat-Regular.ttf');
+}
 
 function setup() {
   createCanvas(800, 600);
@@ -43,6 +57,10 @@ function setup() {
   selectDiff.option('hard');
   selectDiff.option('impossible');
   selectDiff.changed(mySelectEvent); //si on change de valeur alors ça lance la fonction mySelectEvent
+
+  //fireworks :
+  //gravité dirige de 0 en abscisse et +0.2 en ordonné
+  gravity = createVector(0, 0.2);
 }
 
 function draw() {
@@ -103,6 +121,7 @@ function display() {
   //si on meurt
   if (gun.death() && frameCount % 100 == 80) {
     phase = 4;
+    addFirework(0, 255);
   }
 }
 
@@ -127,23 +146,30 @@ function allPhases() {
   else if (phase == 2) {
     boss.show();
     if (difficulty == "impossible") {
-     boss2.show(); 
+      boss2.show();
       //si les 2 boss sont morts
-    if (boss.death() && boss2.death() && frameCount % 150 == 140) {
-      phase = 3;
-    }
-    }
-    else { //si on est pas en mode impossible
-    //si le boss est mort + frameCount pour laisser un peu l'animation de mort
-    if (boss.death() && frameCount % 150 == 140) {
-      phase = 3;
-    }
+      if (boss.death() && boss2.death() && frameCount % 150 == 140) {
+        phase = 3;
+      }
+    } else { //si on est pas en mode impossible
+      //si le boss est mort + frameCount pour laisser un peu l'animation de mort
+      if (boss.death() && frameCount % 150 == 140) {
+        phase = 3;
+        //ajoute un feu d'artifice
+        addFirework(10, 0);
+      }
     }
   }
 
   //le boss est mort, victoire
   else if (phase == 3) {
     //affichage de la victoire, feu d'artifice
+    textCounter = 0; //indice 0 du tableau
+    fill(0, 175);
+    rect(0, 0, width, height);
+    noFill();
+    //fond noir qui recouvre le premier fond mais avec un //peu de transparence ce qui permet de laisser des traces
+    allumeLeFeu();
 
     //recommencer
     fill(255);
@@ -153,7 +179,12 @@ function allPhases() {
   //notre canon est mort, défaite
   else if (phase == 4) {
     //affichage de la défaite, feu d'artifice
-
+    textCounter = 1; //indice 1 du tableau
+    fill(0, 175);
+    rect(0, 0, width, height);
+    noFill();
+    //fond noir qui recouvre le premier fond mais avec un //peu de transparence ce qui permet de laisser des traces
+    allumeLeFeu();
     //recommencer
     fill(255);
     textSize(20);
@@ -247,4 +278,24 @@ function life() {
 //changement de difficulté
 function mySelectEvent() {
   difficulty = selectDiff.value();
+}
+//feux d'artifices
+
+//affiche les firework et les enlèves une fois fini
+function allumeLeFeu() {
+  //parcours de la fin au début car on retire des objets
+  for (let i = fireworks.length - 1; i >= 0; i--) {
+    fireworks[i].update();
+    fireworks[i].show();
+    if (fireworks[i].done()) {
+      fireworks.splice(i, 1);
+    }
+  }
+  console.log(fireworks.length); //affiche le nombre de feux d'artifices
+}
+
+//ajoute un feu d'artifice
+function addFirework(x, r) {
+  let f = new Firework(x, r);
+  fireworks.push(f);
 }

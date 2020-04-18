@@ -37,7 +37,7 @@ class Bullet {
   }
   hit(e) {
     if (this.x > e.x && this.x < e.x+e.w && this.y>e.y && this.y<e.y+e.h) {
-    console.log("hit");
+    //console.log("hit");
       this.y =-10;
       return true;
     }
