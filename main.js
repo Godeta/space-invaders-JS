@@ -118,10 +118,12 @@ function display() {
     }
   }
 
+  if (phase!=4) { //pour ne pas continuer lorsque l'on est en phase défaite
   //si on meurt
   if (gun.death() && frameCount % 100 == 80) {
     phase = 4;
     addFirework(0, 255);
+    }
   }
 }
 
